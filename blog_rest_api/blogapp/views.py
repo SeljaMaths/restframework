@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from .serializera import BlogSerializers,CategorySerializer
 from rest_framework.decorators import api_view
 from rest_framework import status
-
+from rest_framework import generics
 # Create your views here.
 
 
@@ -125,12 +125,24 @@ class Blog_DetailView (APIView):
 class CategoryListView(APIView):
     def get (self, request):
         all_category = category.objects.all()
-        serializers = CategorySerializer(all_category, many=True)
+        serializers = CategorySerializer(all_category, many=True,context={'request': request})
         return Response(serializers.data)
 
 
 class CategoryDetailView (APIView):
     def get (self, request, pk):
         single_category = category.objects.get(pk=pk)
-        serializers = CategorySerializer (single_category)
+        serializers = CategorySerializer (single_category,context={'request': request})
         return Response (serializers.data)
+
+#generic views
+
+from rest_framework import mixins
+class BlogListGenericView (mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializers
+    def get (self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post (self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)

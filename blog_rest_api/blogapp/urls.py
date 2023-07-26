@@ -12,8 +12,9 @@ urlpatterns = [
     path('put_blog_list/<int:pk>/', views.put_blog_list, name='put_blog_list'),
     path('BlogListView/', views.BlogListView.as_view(), name='BlogListView'),
     path('Blog_DetailView/<int:pk>/', views.Blog_DetailView.as_view(), name='Blog_DetailView'),
-    path('CategoryListView/', views.CategoryListView.as_view(), name='CategoryListView'),
-    path('CategoryDetailView/<int:pk>/', views.CategoryDetailView.as_view(), name='CategoryDetailView')
+    path('CategoryListView/', views.CategoryListView.as_view(), name='Category-ListView'),
+    path('CategoryDetailView/<int:pk>/', views.CategoryDetailView.as_view(), name='category-detail'),
+    path('BlogListGenericView/', views.BlogListGenericView.as_view(), name='BlogListGenericView')
 
 
 ]

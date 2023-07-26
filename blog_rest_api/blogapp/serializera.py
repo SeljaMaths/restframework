@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from . models import *
+from .urls import  *
+
 
 
 # nested serializers
@@ -12,13 +14,42 @@ class BlogSerializers (serializers. ModelSerializer):
         fields = "__all__"
 
 
-class CategorySerializer (serializers. ModelSerializer):
+class CategorySerializer (serializers.HyperlinkedModelSerializer):
     category_name = serializers.CharField()
     category = BlogSerializers(many=True,read_only=True)
-
     class Meta:
         model = category
-        exclude = ['id', ]
+        fields ='__all__'
+    # category=serializers.StringRelatedField(many=True)
+    # category = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
+    # category = serializers.SlugRelatedField(many=True,read_only=True,slug_field='slug')
+    # category = serializers.HyperlinkedRelatedField(
+    #     many=True,
+    # read_only=True,
+    #     view_name='Blog_DetailView'
+    #
+    #
+    # )
+    #
+
+
+# class CategorySerializer (serializers. ModelSerializer):
+#     # category_name = serializers.CharField()
+#     # category = BlogSerializers(many=True,read_only=True)
+#     # category=serializers.StringRelatedField(many=True)
+#     # category = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
+#     # category = serializers.SlugRelatedField(many=True,read_only=True,slug_field='slug')
+#     category = serializers.HyperlinkedRelatedField(
+#         many=True,
+#     read_only=True,
+#         view_name='Blog_DetailView'
+#
+#
+#     )
+#
+#     class Meta:
+#         model = category
+#         exclude = ['id', ]
 
 # def validate_title(value):
 #     if len(value) < 4:
