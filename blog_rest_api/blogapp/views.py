@@ -166,6 +166,22 @@ class BlogDetailGenericView (mixins.RetrieveModelMixin,mixins.UpdateModelMixin,
 # concerate view classes
 
 
-class BlogListCon (generics.CreateAPIView):
+class Blogcreatecon (generics.CreateAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializers
+
+
+class BlogListCon (generics.ListAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializers
+
+
+class BlogRetrieveCon (generics.RetrieveAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializers
+
+
+class BlogdeleteCon (generics.DestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializers
+    lookup_field = 'slug'
