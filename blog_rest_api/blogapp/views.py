@@ -148,7 +148,8 @@ class BlogListGenericView (mixins.ListModelMixin, mixins.CreateModelMixin, gener
         return self.create(request, *args, **kwargs)
 
 
-class BlogDetailGenericView (mixins.RetrieveModelMixin,mixins.UpdateModelMixin, generics.GenericAPIView):
+class BlogDetailGenericView (mixins.RetrieveModelMixin,mixins.UpdateModelMixin,
+                             mixins.DestroyModelMixin,generics.GenericAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializers
 
@@ -157,3 +158,6 @@ class BlogDetailGenericView (mixins.RetrieveModelMixin,mixins.UpdateModelMixin, 
 
     def put(self, request, *args, **kwargs) :
         return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs) :
+        return self.destroy(request, *args, **kwargs)
