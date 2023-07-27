@@ -15,7 +15,9 @@ urlpatterns = [
     path('CategoryListView/', views.CategoryListView.as_view(), name='Category-ListView'),
     path('CategoryDetailView/<int:pk>/', views.CategoryDetailView.as_view(), name='category-detail'),
     path('BlogListGenericView/', views.BlogListGenericView.as_view(), name='BlogListGenericView'),
-    path('BlogDetailGenericView/<int:pk>/', views.BlogDetailGenericView.as_view(), name='BlogDetailGenericView')
+    # path('BlogDetailGenericView/<int:pk>/', views.BlogDetailGenericView.as_view(), name='BlogDetailGenericView'),
+    path('BlogDetailGenericView/<str:slug>/', views.BlogDetailGenericView.as_view(), name='BlogDetailGenericView'),
+    path('BlogListCon/', views.BlogListCon.as_view(), name='BlogListCon')
 
 
 ]

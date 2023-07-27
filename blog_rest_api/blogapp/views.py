@@ -152,6 +152,7 @@ class BlogDetailGenericView (mixins.RetrieveModelMixin,mixins.UpdateModelMixin,
                              mixins.DestroyModelMixin,generics.GenericAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializers
+    lookup_field = 'slug'
 
     def get(self, request, *args, **kwargs) :
         return self.retrieve(request, *args, **kwargs)
@@ -161,3 +162,10 @@ class BlogDetailGenericView (mixins.RetrieveModelMixin,mixins.UpdateModelMixin,
 
     def delete(self, request, *args, **kwargs) :
         return self.destroy(request, *args, **kwargs)
+
+# concerate view classes
+
+
+class BlogListCon (generics.CreateAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializers
