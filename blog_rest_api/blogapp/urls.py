@@ -20,7 +20,11 @@ urlpatterns = [
     path('BlogListCon/', views.BlogListCon.as_view(), name='BlogListCon'),
     path('Blogcreatecon/', views.Blogcreatecon.as_view(), name='Blogcreatecon'),
     path('BlogRetrieveCon/<int:pk>/', views.BlogRetrieveCon.as_view(), name='BlogRetrieveCon'),
-    path('BlogdeleteCon/<str:slug>/', views.BlogdeleteCon.as_view(), name='BlogdeleteCon')
+    path('BlogdeleteCon/<str:slug>/', views.BlogdeleteCon.as_view(), name='BlogdeleteCon'),
+    path('BlogUpdateCon/<int:pk>/', views.BlogUpdateCon.as_view(), name='BlogUpdateCon'),
+    path('BlogretrieveUpdateCon/<int:pk>/', views.BlogretrieveUpdateCon.as_view(), name='BlogretrieveUpdateCon'),
+    path('BlogretrievedeleteeCon/<int:pk>/', views.BlogretrievedeleteeCon.as_view(), name='BlogretrievedeleteeCon'),
+    path('BlogListDestroyApiView/', views.BlogListDestroyApiView.as_view(), name='BlogListDestroyApiView')
 
 
 ]
