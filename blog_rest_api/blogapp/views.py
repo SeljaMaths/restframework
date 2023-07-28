@@ -210,3 +210,86 @@ class BlogListDestroyApiView (generics.ListCreateAPIView):
 class BloglistUPdateDeleteApiView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializers
+
+
+#creating view sets and routes in django
+
+
+from rest_framework import viewsets
+from django.shortcuts import get_object_or_404
+
+
+
+class BlogViewsets(viewsets.ViewSet):
+    def list(self,request):
+        queryset = Blog.objects.filter(is_public=True)
+        serializer = BlogSerializers(queryset,many=True)
+        return Response(serializer.data)
+
+    def retrieve(self,request,pk=None):
+        queryset = Blog.objects.filter(is_public=True)
+        blog_list = get_object_or_404(queryset, pk=pk)
+        serializer = BlogSerializers(blog_list)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = BlogSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk=None):
+        blog = get_object_or_404(Blog, pk=pk)
+        serializer = BlogSerializers(blog, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        blog = get_object_or_404(Blog, pk=pk)
+        blog.delete()
+        return Response({"Message": "Your blog has been deleted"}, status=status.HTTP_204_NO_CONTENT)
+
+# Modelviewsets
+
+
+class BlogViewModelset(viewsets.ModelViewSet):
+    queryset = Blog.objects.filter(is_public =True)
+    serializer_class = BlogSerializers
+
+
+class BlogListCreateView (generics.ListCreateAPIView):
+    queryset = Blog.objects.filter(is_public = True)
+    serializer_class = BlogSerializers
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = BlogSerializers(queryset, many=True, context={'request': request})
+        if queryset.exists():
+            return Response (serializer.data, status=status. HTTP_200_OK)
+        else:
+            return Response({ 'Message': 'No blogs found'}, status=status.HTTP_204_NO_CONTENT)
+
+    def create(self,request,*args,**kwargs):
+        serializer = BlogSerializers(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=self.request.user)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data,status=status.HTTP_201_CREATED, headers=headers)
+
+
+class BlogLiseDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset =  Blog.objects.filter(is_public=True)
+    serializer_class = BlogSerializers
+    filed = 'id'
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        if instance:
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response({'Message':'No blog found'},status=status.HTTP_404_NOT_FOUND)
+

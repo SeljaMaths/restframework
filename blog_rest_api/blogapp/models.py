@@ -18,6 +18,7 @@ class category(models.Model):
 
 
 class Blog(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=100)
     description = models.TextField()
@@ -37,10 +38,17 @@ class Blog(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args,**kwargs):
+    # def save(self, *args,**kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(self.title)
+    #     return super().save(*args,**kwargs)
+
+
+    def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
-        return super().save(*args,**kwargs)
+            base_slug = slugify(self.title + " " + self.author.username + " " + self.category.category_name)
+            self.slug = base_slug + ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(5))
+            return super().save(*args, **kwargs)
 
 
 class BlogComment(models.Model):

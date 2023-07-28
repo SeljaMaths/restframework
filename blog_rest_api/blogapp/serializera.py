@@ -7,6 +7,7 @@ from .urls import  *
 # nested serializers
 
 class BlogSerializers (serializers. ModelSerializer):
+    author = serializers.StringRelatedField(read_only=True)
 
 
     class Meta:

@@ -1,8 +1,15 @@
 
-from django.urls import path
+from django.urls import path,include
 from . import views
 
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+# router.register(r'blogs',views.BlogViewsets,basename='blogs')
+router.register(r'blogs',views.BlogViewModelset,basename='blogs')
+
 urlpatterns = [
+    path('', include(router.urls)),
     path('', views.blog_list, name='blog_list'),
     path('blog_lists/', views.blog_lists, name='blog_lists'),
     path('blog_detail/<int:pk>/', views.blog_detail, name='blog_detail'),
@@ -25,7 +32,10 @@ urlpatterns = [
     path('BlogretrieveUpdateCon/<int:pk>/', views.BlogretrieveUpdateCon.as_view(), name='BlogretrieveUpdateCon'),
     path('BlogretrievedeleteeCon/<int:pk>/', views.BlogretrievedeleteeCon.as_view(), name='BlogretrievedeleteeCon'),
     path('BlogListDestroyApiView/', views.BlogListDestroyApiView.as_view(), name='BlogListDestroyApiView'),
-    path('BloglistUPdateDeleteApiView/<int:pk>/', views.BloglistUPdateDeleteApiView.as_view(), name='BloglistUPdateDeleteApiView')
+    path('BloglistUPdateDeleteApiView/<int:pk>/', views.BloglistUPdateDeleteApiView.as_view(), name='BloglistUPdateDeleteApiView'),
+    path('BlogListCreateView/', views.BlogListCreateView.as_view(), name='BlogListCreateView'),
+    path('BlogLiseDetailView/<int:pk>/', views.BlogLiseDetailView.as_view(), name='BlogLiseDetailView'),
+
 
 
 ]
