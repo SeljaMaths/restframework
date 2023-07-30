@@ -3,8 +3,15 @@ from . models import *
 from .urls import  *
 
 
+class BlogCommentserializer(serializers.ModelSerializer):
+    blog = serializers.StringRelatedField(read_only=True)
+    author = serializers.ReadOnlyField(source='author.username')
+    class Meta:
+        model = BlogComment
+        fields ='__all__'
 
 # nested serializers
+
 
 class BlogSerializers (serializers. ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
@@ -16,6 +23,7 @@ class BlogSerializers (serializers. ModelSerializer):
 
 
 class CategorySerializer (serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     category_name = serializers.CharField()
     category = BlogSerializers(many=True,read_only=True)
     class Meta:

@@ -9,8 +9,31 @@ router = routers.DefaultRouter()
 router.register(r'blogs',views.BlogViewModelset,basename='blogs')
 
 urlpatterns = [
-    path('', include(router.urls)),
     path('', views.blog_list, name='blog_list'),
+    # category
+    path('CategoryListCreateView/', views.CategoryListCreateView.as_view(), name='CategoryListCreateView'),
+    path('Category_Detail_View/<int:pk>/', views.Category_Detail_View.as_view(), name='Category_Detail_View'),
+    path('BLogcommentLIstCreateview/<int:blog_id>/', views.BLogcommentLIstCreateview.as_view(), name='BLogcommentLIstCreateview'),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    path('', include(router.urls)),
+    # path('', views.blog_list, name='blog_list'),
     path('blog_lists/', views.blog_lists, name='blog_lists'),
     path('blog_detail/<int:pk>/', views.blog_detail, name='blog_detail'),
     path('list_blog/', views.list_blog, name='list_blog'),
@@ -35,6 +58,7 @@ urlpatterns = [
     path('BloglistUPdateDeleteApiView/<int:pk>/', views.BloglistUPdateDeleteApiView.as_view(), name='BloglistUPdateDeleteApiView'),
     path('BlogListCreateView/', views.BlogListCreateView.as_view(), name='BlogListCreateView'),
     path('BlogLiseDetailView/<int:pk>/', views.BlogLiseDetailView.as_view(), name='BlogLiseDetailView'),
+
 
 
 

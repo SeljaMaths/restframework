@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import JsonResponse
 from . models import *
 from rest_framework.response import Response
-from .serializera import BlogSerializers,CategorySerializer
+from .serialziers import BlogSerializers,CategorySerializer,BlogCommentserializer
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework import generics
@@ -27,8 +27,8 @@ def blog_lists(request):
 def blog_detail(request,pk):
     blogs = Blog.objects.get(pk=pk)
     data ={
-        'name':blogs.name,
-        'description':blogs.blog_description,
+        # 'name':blogs.name,
+        'description':blogs.description,
         'slug':blogs.slug
     }
     return JsonResponse(data)
@@ -292,4 +292,48 @@ class BlogLiseDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Response(serializer.data,status=status.HTTP_200_OK)
         else:
             return Response({'Message':'No blog found'},status=status.HTTP_404_NOT_FOUND)
+
+
+class CategoryListCreateView(generics.ListCreateAPIView):
+    queryset = category.objects.all()
+    serializer_class = CategorySerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = CategorySerializer(queryset, many=True, context={'request': request})
+        if queryset.exists():
+            return Response (serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({ 'Message': 'No category found'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class Category_Detail_View(generics.RetrieveUpdateDestroyAPIView):
+    queryset = category.objects.all()
+    serializer_class = CategorySerializer
+    liikup_field = 'id'
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        if instance:
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        else:
+            return Response({'Message':'No category found'},status=status.HTTP_404_NOT_FOUND)
+
+
+class BLogcommentLIstCreateview(generics.ListCreateAPIView):
+    queryset =BlogComment.objects.all()
+    serializer_class = BlogCommentserializer
+
+    def get_queryset(self):
+        blog_id = self.kwargs.get('blog_id')
+        return BlogComment.objects.filter(blog_id=blog_id)
+
+    def perform_create(self, serializer):
+        blog_id = self.kwargs.get('blog_id')
+        blog = get_object_or_404(Blog,id=blog_id)
+        if BlogComment.objects.filter(blog=blog,author = self.request.user).exists():
+            raise serializer.ValidationError({'Messages':'you have  already added  comment on this blog'})
+        serializer.save(author = self.request.user,blog=blog)
+
 
