@@ -6,6 +6,8 @@ from .serialziers import BlogSerializers,CategorySerializer,BlogCommentserialize
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly
+from .permissions import IsAdminUserReadOnly,IsOwneronly
 # Create your views here.
 
 
@@ -298,6 +300,9 @@ class CategoryListCreateView(generics.ListCreateAPIView):
     queryset = category.objects.all()
     serializer_class = CategorySerializer
 
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = CategorySerializer(queryset, many=True, context={'request': request})
@@ -335,5 +340,19 @@ class BLogcommentLIstCreateview(generics.ListCreateAPIView):
         if BlogComment.objects.filter(blog=blog,author = self.request.user).exists():
             raise serializer.ValidationError({'Messages':'you have  already added  comment on this blog'})
         serializer.save(author = self.request.user,blog=blog)
+
+
+class BlogCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = BlogComment.objects.all()
+    serializer_class = BlogCommentserializer
+    permission_classes = [IsOwneronly]
+
+    def get_object(self):
+        comment_id = self.kwargs.get('comment_id')
+        comment = get_object_or_404(BlogComment,id = comment_id)
+        blog_id = self.kwargs.get('blog_id')
+        if comment.blog_id != blog_id:
+            raise serializers.ValidationError({'message':'this comment is not related to the request blog'})
+        return comment
 
 
