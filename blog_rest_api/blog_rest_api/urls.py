@@ -21,4 +21,5 @@ urlpatterns = [
     path('',include('blogapp.urls')),
     # path('api_auth/', include('rest_framework.urls')),
     path('',include('newapp.urls')),
+    path('', include('account.urls')),
 ]

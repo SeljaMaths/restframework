@@ -7,10 +7,10 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .models import YourModel
 from .serializers import YourModelSerializer
-
+from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly
 class YourModelView(APIView):
     # authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticated]  # Apply IsAuthenticated permission
+    permission_classes = [IsAdminUser]  # Apply IsAuthenticated permission
 
     def get(self, request):
         data = YourModel.objects.all()
@@ -32,7 +32,7 @@ class YourModelView(APIView):
 from django.http import Http404
 class YourDetailView(APIView):
     # authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     def get(self, request,pk):
         all_blogs = YourModel.objects.get(pk=pk)
