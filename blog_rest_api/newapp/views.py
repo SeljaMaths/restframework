@@ -8,6 +8,35 @@ from rest_framework.permissions import IsAuthenticated
 from .models import YourModel
 from .serializers import YourModelSerializer
 from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly
+from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
+
+'''filterbackend'''
+
+
+class new_list_back(generics.ListAPIView):
+    serializer_class = YourModelSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
+
+    def get_queryset(self):
+        pk=self.kwargs.get('pk')
+        return YourModel.objects.filter(pk = pk)
+
+
+#normal filtering
+
+
+class new_list(generics.ListAPIView):
+    serializer_class = YourModelSerializer
+
+    def get_queryset(self):
+        name=self.kwargs.get('name')
+        return YourModel.objects.filter(name = name)
+
+
+
+
 class YourModelView(APIView):
     # authentication_classes = [BasicAuthentication]
     permission_classes = [IsAdminUser]  # Apply IsAuthenticated permission
@@ -103,3 +132,6 @@ class YourDetailView(APIView):
 #             serializer.save()
 #             return Response(serializer.data)
 #         return Response(serializer.errors)
+
+
+

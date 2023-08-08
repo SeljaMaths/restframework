@@ -8,6 +8,8 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly
 from .permissions import IsAdminUserReadOnly,IsOwneronly
+from rest_framework.throttling import UserRateThrottle,AnonRateThrottle,ScopedRateThrottle
+from .throttle import CategoryListCreateViewThrottle
 # Create your views here.
 
 
@@ -302,6 +304,14 @@ class CategoryListCreateView(generics.ListCreateAPIView):
 
     # permission_classes = [IsAuthenticated]
     permission_classes = [IsAuthenticatedOrReadOnly]
+    #username throotale and annorate
+    # throttle_classes = [UserRateThrottle,AnonRateThrottle]
+    # scope
+    # throttle_classes = [ScopedRateThrottle]
+    # throttle_scope = 'blog-list'
+    # custom
+    throttle_classes = [CategoryListCreateViewThrottle]
+
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
