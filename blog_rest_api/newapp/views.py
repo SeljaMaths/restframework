@@ -59,6 +59,7 @@ class YourModelView(APIView):
 
 
 from django.http import Http404
+
 class YourDetailView(APIView):
     # authentication_classes = [BasicAuthentication]
     permission_classes = [IsAdminUser]
